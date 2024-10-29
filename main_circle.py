@@ -1,9 +1,10 @@
 from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
 from transformers import AdamW, get_scheduler
 import json,torch,os
+import torch.nn as nn
 import numpy as np
 import random
-from Qwenfinetuning.model import model
+# from Qwenfinetuning.model import model
 
 
 def seed_everything(seed=1029):
@@ -19,6 +20,9 @@ learning_rate = 1e-4
 epoch_num = 3
 
 optimizer = AdamW(model.parameters(), lr=learning_rate)
+# 使用梯度裁剪避免梯度爆炸：
+# torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
+
 lr_scheduler = get_scheduler(
     'linear',
     optimizer=optimizer,
