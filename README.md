@@ -1,2 +1,2 @@
 # Qwen微调nlp任务
-使用Qwen大模型，微调多种nlp任务（文本分类，情感分析，文本摘要，生成式问答）
+以Qwen2-1.5b-instruct为出发点，利用其中的prompt提示模板和lora微调，尝试不同的nlp任务
