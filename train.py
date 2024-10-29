@@ -9,6 +9,10 @@ def train_loop(dataloader, model, optimizer, lr_scheduler, epoch, total_loss):
 
     progress_bar = tqdm(enumerate(dataloader), total=len(dataloader))
     for step, batch_data in progress_bar:
+        # 检查Nan或Inf值：
+        # if torch.isnan(batch_data['input_ids']).any() or torch.isinf(batch_data['input_ids']).any():
+            # print("Data contains NaN or Inf values!")
+            # continue  # 跳过当前 batch 或采取其他措施
         model_inputs = batch_data['input_ids']
         attention_mask = batch_data['attention_mask']
         labels = batch_data['labels']
@@ -21,10 +25,11 @@ def train_loop(dataloader, model, optimizer, lr_scheduler, epoch, total_loss):
         
 
         optimizer.zero_grad()
+        # 1.做混合精度训练：
         scaler.scale(loss).backward()  # 缩放损失以避免 FP16 下的数值溢出
         scaler.step(optimizer)  # 更新权重
         scaler.update()  # 更新缩放因子
-        # 不做混合精度训练：
+        # 2.不做混合精度训练：
         # loss.backward()
         # optimizer.step()
         lr_scheduler.step()
